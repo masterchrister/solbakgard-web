@@ -1,0 +1,389 @@
+/* --- Global Settings & Theme --- */
+:root {
+    --color-wood-dark: #3a2e28;
+    --color-wood-light: #8a6a57;
+    --color-cream: #f4f1eb;
+    --color-text-dark: #222222;
+    --color-accent-gold: #c9a87c;
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Montserrat', sans-serif;
+}
+
+/* --- Base Reset & Smooth Scroll --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-cream);
+    color: var(--color-text-dark);
+    line-height: 1.6;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --- Reusable Container --- */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* --- Section Base Styling --- */
+.section {
+    padding: 6rem 0;
+}
+
+.section h2 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--color-wood-dark);
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+/* --- Header & Navigation --- */
+.site-header {
+    background-color: var(--color-wood-dark);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--color-cream);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-link {
+    color: var(--color-cream);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.nav-link:hover,
+.nav-link.active { /* 'active' class is added by JS */
+    color: var(--color-accent-gold);
+    border-bottom-color: var(--color-accent-gold);
+}
+
+.cta-button {
+    background-color: var(--color-accent-gold);
+    color: var(--color-wood-dark);
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 0.5rem 1.2rem;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: var(--color-cream);
+    color: var(--color-wood-dark);
+}
+
+.nav-toggle {
+    display: none; /* Hidden on desktop */
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.hamburger {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--color-cream);
+    position: relative;
+    transition: background 0.2s ease-out;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 3px;
+    background: var(--color-cream);
+    transition: transform 0.2s ease-out, top 0.2s ease-out, bottom 0.2s ease-out;
+}
+
+.hamburger::before { top: -8px; }
+.hamburger::after { bottom: -8px; }
+
+/* --- Mobile Nav 'Open' State --- */
+.nav-open .hamburger { background: transparent; }
+.nav-open .hamburger::before { transform: rotate(45deg); top: 0; }
+.nav-open .hamburger::after { transform: rotate(-45deg); bottom: 0; }
+
+
+/* --- Section: Intro --- */
+.section-intro {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* TODO: Replace with your image */
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding-top: 5rem; /* Offset for sticky header */
+}
+
+.section-intro h1 {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.section-intro p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    max-width: 600px;
+}
+
+.scroll-down-arrow {
+    position: absolute;
+    bottom: 2rem;
+    animation: bounce 2s infinite;
+}
+.scroll-down-arrow a {
+    font-size: 2rem;
+    color: white;
+    text-decoration: none;
+}
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-15px); }
+    60% { transform: translateY(-10px); }
+}
+
+
+/* --- Section: About --- */
+.section-about .about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.section-about .about-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+.section-about .about-content .gallery-item { /* Placeholder */
+    height: 300px;
+}
+
+/* --- Section: Gallery --- */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.gallery-item {
+    height: 250px;
+    background-color: var(--color-wood-light);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-style: italic;
+    border-radius: 5px;
+    overflow: hidden; /* For when you add <img> tags */
+}
+
+/* --- Section: Prices --- */
+.pricing-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.price-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 2rem;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.price-card h3 {
+    font-family: var(--font-heading);
+    color: var(--color-wood-dark);
+    margin-bottom: 1rem;
+}
+
+.price-card .price-tag {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-wood-light);
+    margin-top: 1.5rem;
+}
+
+/* --- Section: Map --- */
+.section-map {
+    padding-bottom: 0; /* Map goes to the edge */
+}
+.section-map .container {
+    text-align: center;
+}
+.section-map p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.map-embed iframe {
+    width: 100%;
+    height: 450px;
+    border: 0;
+}
+
+/* --- Footer --- */
+.site-footer {
+    background-color: var(--color-wood-dark);
+    color: var(--color-cream);
+    padding: 4rem 0 2rem 0;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-column h3 {
+    font-family: var(--font-heading);
+    color: var(--color-accent-gold);
+    margin-bottom: 1rem;
+}
+
+.footer-column a {
+    color: var(--color-cream);
+    text-decoration: none;
+}
+.footer-column a:hover {
+    text-decoration: underline;
+}
+
+.social-links a {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    display: inline-block;
+    padding: 0.5rem;
+    border: 1px solid var(--color-accent-gold);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid var(--color-wood-light);
+    padding-top: 2rem;
+    font-size: 0.9rem;
+}
+
+/* --- 📱 Responsive Media Queries --- */
+
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed;
+        top: 65px; /* Height of header */
+        right: 0;
+        width: 100%;
+        max-width: 300px;
+        height: calc(100vh - 65px);
+        background-color: var(--color-wood-dark);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 2rem;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-out;
+    }
+
+    .nav-open .nav-links {
+        transform: translateX(0);
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    .nav-link {
+        display: block;
+        padding: 1rem;
+        font-size: 1.2rem;
+        width: 100%;
+        border-bottom: 1px solid var(--color-wood-light);
+    }
+    
+    .nav-link:hover, .nav-link.active {
+        border-bottom-color: var(--color-accent-gold);
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+
+    .section-intro h1 {
+        font-size: 2.5rem;
+    }
+    
+    .section-about .about-content {
+        grid-template-columns: 1fr;
+    }
+
+    .pricing-columns,
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-column {
+        text-align: center;
+    }
+
+    .social-links {
+        text-align: center;
+    }
+}
