@@ -308,6 +308,17 @@ img {
     font-size: 0.9rem;
 }
 
+.made-with-love {
+    font-size: 0.9rem;
+    color: var(--color-cream);
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}
+
+.made-with-love .fa-heart {
+    color: #e25555;
+    margin: 0 2px;
+}
 
 @media (max-width: 768px) {
     .nav-links {
