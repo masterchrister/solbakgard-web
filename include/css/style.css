@@ -315,6 +315,10 @@ img {
     margin-top: 0.5rem;
 }
 
+.made-with-love a {
+    text-decoration: none;
+}
+
 .made-with-love .fa-heart {
     color: #e25555;
     margin: 0 2px;
