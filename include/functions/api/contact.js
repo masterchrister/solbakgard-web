@@ -21,7 +21,7 @@ export async function onRequestPost(context) {
             },
             body: JSON.stringify({
                 from: 'Solbak Gård <booking@solbakgard.no>',
-                to: ['marius@harestad.no'],
+                to: ['christer@tysd.al'],
                 subject: `Ny forespørsel fra ${data.name} (Solbak Gård)`,
                 html: `
                     <strong>Ny forespørsel fra nettsiden:</strong><br><br>
