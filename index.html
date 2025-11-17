@@ -30,7 +30,8 @@
     <link rel="stylesheet" href="include/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="include/script/script.js" defer></script>
-    
+    <script src="http://googleusercontent.com/recaptcha/api.js" async defer></script>
+
     <script type="application/ld+json">
         {
         "@context": "https://schema.org",
@@ -244,9 +245,11 @@
                             <textarea id="message" name="message" rows="6" required></textarea>
                         </div>
                         <div class="form-group">
+                        <div class="cf-turnstile" data-sitekey="0x4AAAAAACBRToUd863KzdTJ"></div>
+                        </div>
+                        <div class="form-group">
                             <button type="submit" class="cta-button">Send melding</button>
                         </div>
-                        
                         <div id="form-status" class="form-status"></div>
                     </form>
                     
