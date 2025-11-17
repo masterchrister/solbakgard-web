@@ -88,8 +88,8 @@ img {
     border-bottom: 2px solid transparent;
 }
 
-.nav-link:hover,
-.nav-link.active {
+.nav-link:not(.cta-button):hover,
+.nav-link:not(.cta-button).active {
     color: var(--color-accent-gold);
     border-bottom-color: var(--color-accent-gold);
 }
