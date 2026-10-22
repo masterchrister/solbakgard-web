@@ -34,6 +34,18 @@ CF_EMAIL_API_TOKEN=<token>
 
 Temporarily set `data-sitekey` to `1x00000000000000000000AA` in `index.html`, then run `npx wrangler pages dev .` and open `http://localhost:8788`. The testing secret is only accepted on `localhost`.
 
+## Analytics
+
+Cloudflare Web Analytics (cookieless, no consent banner needed), enabled in the Pages project under *Metrics*. No script is included in the code; Pages injects it automatically.
+
+## Images
+
+Gallery thumbnails live in `include/img/thumb/` (WebP, max 800px); the lightbox opens the original JPGs. To add a gallery image:
+
+```
+magick include/img/solbakgard-NAME.jpg -strip -resize "800x800>" -quality 75 include/img/thumb/solbakgard-NAME.webp
+```
+
 ## Security headers
 
 `_headers` sets the CSP and other security headers. If a new external script, font, or embed is added, add its origin to the CSP as well.

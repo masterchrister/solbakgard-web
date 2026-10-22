@@ -5,14 +5,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelector('.nav-links');
     const siteHeader = document.querySelector('.site-header');
 
+    const setNavOpen = (open) => {
+        siteHeader.classList.toggle('nav-open', open);
+        navToggle.setAttribute('aria-expanded', String(open));
+        navToggle.setAttribute('aria-label', open ? 'Lukk navigasjon' : 'Åpne navigasjon');
+    };
+
     navToggle.addEventListener('click', () => {
-        siteHeader.classList.toggle('nav-open');
+        setNavOpen(!siteHeader.classList.contains('nav-open'));
     });
 
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
-            siteHeader.classList.remove('nav-open');
+            setNavOpen(false);
         });
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && siteHeader.classList.contains('nav-open')) {
+            setNavOpen(false);
+            navToggle.focus();
+        }
     });
 
     const sections = document.querySelectorAll('.section');
@@ -39,6 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
+    const year = document.getElementById('year');
+    if (year) {
+        year.textContent = new Date().getFullYear();
+    }
+
 });
 
 // --- Galleri funksjon ---
@@ -50,25 +68,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const lightboxImage = lightbox.querySelector('.lightbox-image');
         const lightboxClose = lightbox.querySelector('.lightbox-close');
         const galleryItems = document.querySelectorAll('.gallery-grid a.gallery-item');
+        let lastTrigger = null;
 
         galleryItems.forEach(item => {
             item.addEventListener('click', (e) => {
-                e.preventDefault(); 
-                
+                e.preventDefault();
+
                 const fullImageUrl = item.getAttribute('href');
-                
+
                 const altText = item.querySelector('img').getAttribute('alt');
-                
+
                 lightboxImage.setAttribute('src', fullImageUrl);
                 lightboxImage.setAttribute('alt', altText);
-                
+
+                lastTrigger = item;
                 lightbox.classList.add('visible');
+                lightboxClose.focus();
             });
         });
 
         const closeLightbox = () => {
             lightbox.classList.remove('visible');
-            lightboxImage.setAttribute('src', ''); 
+            lightboxImage.removeAttribute('src');
+            if (lastTrigger) {
+                lastTrigger.focus();
+            }
         };
 
         lightboxClose.addEventListener('click', closeLightbox);
@@ -76,6 +100,18 @@ document.addEventListener('DOMContentLoaded', () => {
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) {
                 closeLightbox();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('visible')) return;
+
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'Tab') {
+                // Lukkeknappen er eneste fokuserbare element i dialogen
+                e.preventDefault();
+                lightboxClose.focus();
             }
         });
     }
