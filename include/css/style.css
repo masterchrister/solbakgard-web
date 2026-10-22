@@ -629,6 +629,14 @@ img {
     cursor: pointer;
 }
 
+.form-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 .form-status {
     margin-top: 1.5rem;
     text-align: center;

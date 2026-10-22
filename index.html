@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="include/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="include/script/script.js" defer></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <script type="application/ld+json">
         {
@@ -39,7 +40,7 @@
         "description": "Selskapslokale og festlokale i Randaberg for utleie til bryllup, konfirmasjon, dåp og andre arrangementer. Over 200kvm med scene, dansegulv og eget kjøkken.",
         "url": "https://solbakgard.no/",
         "telephone": "+4798219851",
-        "email": "marius@harestad.no",
+        "email": "solbakgaard@gmail.com",
         "image": "https://solbakgard.no/include/img/solbakgard-appertif.jpg",
         "address": {
             "@type": "PostalAddress",
@@ -58,13 +59,7 @@
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-W7LBR998CV"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-W7LBR998CV');
-    </script>
+    <script src="include/script/analytics.js"></script>
 
 </head>
 <body>
@@ -217,9 +212,8 @@
                     <iframe 
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24308.089304169855!2d5.578741917642108!3d59.012511545844!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x463bb59a334e1245%3A0x36f1febd079f7eb5!2sSolbak%20G%C3%A5rd!5e0!3m2!1sno!2sno!4v1763334767390!5m2!1sno!2sno" 
                         width="100%" 
-                        height="450" 
-                        style="border:0;" 
-                        allowfullscreen="" 
+                        height="450"
+                        allowfullscreen=""
                         loading="lazy" 
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
@@ -234,15 +228,22 @@
                     <form id="contact-form" class="contact-form" method="POST" action="/api/contact">
                         <div class="form-group">
                             <label for="name">Navn</label>
-                            <input type="text" id="name" name="name" required>
+                            <input type="text" id="name" name="name" maxlength="100" autocomplete="name" required>
                         </div>
                         <div class="form-group">
                             <label for="email">E-post</label>
-                            <input type="email" id="email" name="email" required>
+                            <input type="email" id="email" name="email" maxlength="254" autocomplete="email" required>
                         </div>
                         <div class="form-group">
                             <label for="message">Melding</label>
-                            <textarea id="message" name="message" rows="6" required></textarea>
+                            <textarea id="message" name="message" rows="6" maxlength="5000" required></textarea>
+                        </div>
+                        <div class="form-hp" aria-hidden="true">
+                            <label for="fax">Fax</label>
+                            <input type="text" id="fax" name="fax" tabindex="-1" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <div class="cf-turnstile" data-sitekey="0x4AAAAAACBRToUd863KzdTJ" data-action="contact" data-size="flexible"></div>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="cta-button">Send melding</button>
@@ -264,7 +265,7 @@
                 <div class="footer-column">
                     <h3>Ta kontakt</h3>
                     <p>
-                        <a href="mailto:marius@harestad.no">marius@harestad.no</a><br>
+                        <a href="mailto:solbakgaard@gmail.com">Solbakgaard@gmail.com</a><br>
                         <a href="tel:04798219851">98 21 98 51</a>
                     </p>
                 </div>

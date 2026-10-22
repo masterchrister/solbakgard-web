@@ -95,6 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitButton = contactForm.querySelector('button[type="submit"]');
             const formData = new FormData(contactForm);
 
+            if (!formData.get('cf-turnstile-response')) {
+                formStatus.textContent = 'Vent til sikkerhetssjekken er fullført.';
+                formStatus.className = 'form-status error';
+                return;
+            }
+
             formStatus.textContent = 'Sender...';
             formStatus.className = 'form-status';
             submitButton.disabled = true;
@@ -105,14 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: formData,
                 });
 
-                const result = await response.json();
+                const result = await response.json().catch(() => ({}));
 
                 if (response.ok) {
                     formStatus.textContent = result.message;
                     formStatus.classList.add('success');
                     contactForm.reset();
                 } else {
-                    throw new Error(result.message);
+                    formStatus.textContent = result.message || 'Noe gikk galt. Prøv igjen senere.';
+                    formStatus.classList.add('error');
                 }
 
             } catch (error) {
@@ -120,6 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 formStatus.classList.add('error');
             } finally {
                 submitButton.disabled = false;
+                // Turnstile-tokens kan kun brukes én gang
+                if (window.turnstile) {
+                    window.turnstile.reset(contactForm.querySelector('.cf-turnstile'));
+                }
             }
         });
     }
