@@ -22,6 +22,20 @@ The form posts to `functions/api/contact.js`, which verifies the Turnstile token
 | `CF_ACCOUNT_ID` | Text | Cloudflare account ID |
 | `CF_EMAIL_API_TOKEN` | Secret | API token from step 2 |
 
+## Booking calendar
+
+The booking section shows free and booked dates for the next two years, read from the Solbak Gård Google Calendar. `functions/api/availability.js` fetches the calendar's secret iCal address and returns **only booked dates**: titles, times and other details never reach the browser. Any event on a day marks the whole day as booked (Norwegian time). Results are cached for 10 minutes.
+
+The contact form sends the chosen dates in the email and warns if they collide with an existing booking.
+
+Setup: in Google Calendar, open *Settings > (the Solbak Gård calendar) > Integrate calendar* and copy **Secret address in iCal format**. Add it in Pages as:
+
+| Name | Type | Value |
+| --- | --- | --- |
+| `CALENDAR_ICS_URL` | Secret | Secret iCal address |
+
+Limitation: recurring events only count their first occurrence. Add bookings as single events.
+
 ## Local testing
 
 Create a `.dev.vars` file (git-ignored) and use the Turnstile testing secret:

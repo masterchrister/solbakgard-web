@@ -30,6 +30,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="include/css/style.css">
     <script src="include/script/script.js" defer></script>
+    <script src="include/script/booking.js" defer></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <script type="application/ld+json">
@@ -226,9 +227,21 @@
         </section>
         <section id="kontakt" class="section section-contact">
                 <div class="container">
-                    <h2>Send oss en melding</h2>
-                    <p>Fyll ut skjemaet under, så tar vi kontakt med deg så snart som mulig.</p>
-                    
+                    <h2>Booking</h2>
+                    <p>Sjekk ledige datoer i kalenderen, velg ønsket dato og send oss en forespørsel. Vi tar kontakt så snart som mulig.</p>
+
+                    <div id="booking-calendar" class="booking-calendar" hidden>
+                        <button type="button" class="calendar-nav calendar-prev" data-dir="-1" aria-label="Forrige måned">&lsaquo;</button>
+                        <button type="button" class="calendar-nav calendar-next" data-dir="1" aria-label="Neste måned">&rsaquo;</button>
+                        <div class="calendar-months"></div>
+                        <ul class="calendar-legend">
+                            <li><span class="legend-swatch legend-free"></span>Ledig</li>
+                            <li><span class="legend-swatch legend-booked"></span>Opptatt</li>
+                            <li><span class="legend-swatch legend-selected"></span>Ditt valg</li>
+                        </ul>
+                        <div class="calendar-status" role="status" aria-live="polite"></div>
+                    </div>
+
                     <form id="contact-form" class="contact-form" method="POST" action="/api/contact">
                         <div class="form-group">
                             <label for="name">Navn</label>
@@ -237,6 +250,16 @@
                         <div class="form-group">
                             <label for="email">E-post</label>
                             <input type="email" id="email" name="email" maxlength="254" autocomplete="email" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date_from">Ønsket dato</label>
+                                <input type="date" id="date_from" name="date_from">
+                            </div>
+                            <div class="form-group">
+                                <label for="date_to">Til dato <span class="label-hint">(valgfritt)</span></label>
+                                <input type="date" id="date_to" name="date_to">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="message">Melding</label>

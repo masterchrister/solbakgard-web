@@ -5,6 +5,9 @@
 //   TURNSTILE_SECRET_KEY  (secret)  Turnstile widget secret
 //   CF_ACCOUNT_ID         (text)    Cloudflare konto-ID
 //   CF_EMAIL_API_TOKEN    (secret)  API-token med Email Sending: Edit
+//   CALENDAR_ICS_URL      (secret)  Bookingkalender, se functions/_lib/calendar.js
+
+import { getAvailability, osloDate } from '../_lib/calendar.js';
 
 const MAIL_FROM = 'booking@solbakgard.no';
 const MAIL_TO = 'solbakgaard@gmail.com';
@@ -13,6 +16,37 @@ const TURNSTILE_TEST_SECRET = '1x0000000000000000000000000000000AA';
 
 const LIMITS = { name: 100, email: 254, message: 5000 };
 const EMAIL_PATTERN = /^[^\s@<>"',;]+@[^\s@<>"',;]+\.[^\s@<>"',;]+$/;
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+const dateFormat = new Intl.DateTimeFormat('nb-NO', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+});
+
+function isValidDate(value) {
+    return DATE_PATTERN.test(value) && new Date(`${value}T00:00:00Z`).toISOString().startsWith(value);
+}
+
+function formatDates({ from, to }) {
+    const format = iso => dateFormat.format(new Date(`${iso}T00:00:00Z`));
+    return to && to !== from ? `${format(from)} – ${format(to)}` : format(from);
+}
+
+function shortDates({ from, to }) {
+    const format = iso => iso.split('-').reverse().join('.');
+    return to && to !== from ? `${format(from)}–${format(to)}` : format(from);
+}
+
+// Sjekker ønsket periode mot kalenderen; feil her skal ikke stoppe forespørselen
+async function findConflicts(context, { from, to }) {
+    try {
+        const { booked } = await getAvailability(context);
+        const last = to || from;
+        return booked.filter(day => day >= from && day <= last);
+    } catch (error) {
+        console.error('Kunne ikke sjekke kalenderen:', error);
+        return null;
+    }
+}
 
 function json(message, status) {
     return new Response(JSON.stringify({ message }), {
@@ -66,15 +100,29 @@ async function verifyTurnstile(token, secret, ip, requestHost) {
     return true;
 }
 
-async function sendEmail(env, { name, email, message }) {
+async function sendEmail(env, { name, email, message, dates, conflicts }) {
+    let dateHtml = '';
+    let dateText = '';
+    if (dates) {
+        dateHtml = `<strong>Ønsket dato:</strong> ${escapeHtml(formatDates(dates))}<br>`;
+        dateText = `Ønsket dato: ${formatDates(dates)}\n`;
+        if (conflicts && conflicts.length) {
+            const warning = `OBS: Kalenderen viser allerede booking ${conflicts.map(d => d.split('-').reverse().join('.')).join(', ')}`;
+            dateHtml += `<strong style="color:#b3541e">${escapeHtml(warning)}</strong><br>`;
+            dateText += `${warning}\n`;
+        }
+    }
+
     const html = `
         <strong>Ny forespørsel fra nettsiden:</strong><br><br>
         <strong>Navn:</strong> ${escapeHtml(name)}<br>
         <strong>E-post:</strong> ${escapeHtml(email)}<br>
+        ${dateHtml}
         <strong>Melding:</strong><br>
         <p>${escapeHtml(message).replace(/\r?\n/g, '<br>')}</p>
     `;
-    const text = `Ny forespørsel fra nettsiden:\n\nNavn: ${name}\nE-post: ${email}\n\nMelding:\n${message}\n`;
+    const text = `Ny forespørsel fra nettsiden:\n\nNavn: ${name}\nE-post: ${email}\n${dateText}\nMelding:\n${message}\n`;
+    const subjectDates = dates ? ` – ${shortDates(dates)}` : '';
 
     const res = await fetch(
         `https://api.cloudflare.com/client/v4/accounts/${env.CF_ACCOUNT_ID}/email/sending/send`,
@@ -88,7 +136,7 @@ async function sendEmail(env, { name, email, message }) {
                 from: MAIL_FROM,
                 to: [MAIL_TO],
                 reply_to: email,
-                subject: `Ny forespørsel fra ${name} (Solbak Gård)`,
+                subject: `Ny forespørsel fra ${name}${subjectDates} (Solbak Gård)`,
                 html,
                 text,
             }),
@@ -147,7 +195,26 @@ export async function onRequestPost(context) {
             return json('Ugyldig e-postadresse.', 400);
         }
 
-        await sendEmail(env, { name, email, message });
+        // Ønsket dato er valgfritt (skjemaet brukes også til generelle spørsmål)
+        const dateFrom = field(formData, 'date_from');
+        const dateTo = field(formData, 'date_to');
+        let dates = null;
+        let conflicts = null;
+        if (dateFrom || dateTo) {
+            if (!isValidDate(dateFrom) || (dateTo && !isValidDate(dateTo))) {
+                return json('Ugyldig dato.', 400);
+            }
+            if (dateTo && dateTo < dateFrom) {
+                return json('Til-dato kan ikke være før fra-dato.', 400);
+            }
+            if (dateFrom < osloDate(new Date())) {
+                return json('Ønsket dato har allerede passert.', 400);
+            }
+            dates = { from: dateFrom, to: dateTo };
+            conflicts = await findConflicts(context, dates);
+        }
+
+        await sendEmail(env, { name, email, message, dates, conflicts });
 
         return json('Forespørsel sendt!', 200);
 
